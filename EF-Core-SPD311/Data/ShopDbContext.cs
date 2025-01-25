@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace EF_Core_SPD311.Data;
@@ -6,14 +7,33 @@ public class ShopDbContext : DbContext
 {
     public ShopDbContext()
     {
-        Database.EnsureCreated();
+        //Database.EnsureDeleted();
+        //Database.EnsureCreated();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        optionsBuilder.UseSqlServer(
-            "workstation id=shop-db.mssql.somee.com;packet size=4096;user id=wladnaz_SQLLogin_1;pwd=qsyiy5d3ff;data source=shop-db.mssql.somee.com;persist security info=False;initial catalog=shop-db;TrustServerCertificate=True");
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer(
+                "workstation id=shop-db.mssql.somee.com;packet size=4096;user id=wladnaz_SQLLogin_1;pwd=qsyiy5d3ff;data source=shop-db.mssql.somee.com;persist security info=False;initial catalog=shop-db;TrustServerCertificate=True");
+        }
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // ----- початкова ініціалізація бази даних
+        modelBuilder.Entity<Category>().HasData(new Category[]
+        {
+            new() { Id = 1, Name = "Fruits" },
+            new() { Id = 2, Name = "Electronics" },
+            new() { Id = 3, Name = "Music" },
+            new() { Id = 4, Name = "Home & Garden" },
+            new() { Id = 5, Name = "Sport" }
+        });
     }
 
     // -------- tables
@@ -28,10 +48,13 @@ public class Product
 {
     // PrimaryKey = Id,ProductId
     public int Id { get; set; }
-    public string Name { get; set; }
+    [MaxLength(100)]
+    public string Name { get; set; } = null!;
     public double Price { get; set; }
+    [MaxLength(3000)]
     public string? Description { get; set; }
-    //public string Category { get; set; }
+    [MaxLength(100)]
+    public string? Manufacture { get; set; }
     public int Stock { get; set; }
     public DateTime CreatedAt { get; set; }
     // ForeignKey = EntityNameId
