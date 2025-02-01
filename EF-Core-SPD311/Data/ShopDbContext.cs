@@ -24,16 +24,9 @@ public class ShopDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        // ----- початкова ініціалізація бази даних
-        modelBuilder.Entity<Category>().HasData(new Category[]
-        {
-            new() { Id = 1, Name = "Fruits" },
-            new() { Id = 2, Name = "Electronics" },
-            new() { Id = 3, Name = "Music" },
-            new() { Id = 4, Name = "Home & Garden" },
-            new() { Id = 5, Name = "Sport" }
-        });
+        
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ShopDbContext).Assembly);
+        modelBuilder.SeedData();
     }
 
     // -------- tables
@@ -51,7 +44,6 @@ public class Product
     [MaxLength(100)]
     public string Name { get; set; } = null!;
     public double Price { get; set; }
-    [MaxLength(3000)]
     public string? Description { get; set; }
     [MaxLength(100)]
     public string? Manufacture { get; set; }
@@ -62,6 +54,7 @@ public class Product
     
     // ---- navigation properties
     public Category Category { get; set; }
+    public ICollection<Order> Orders { get; set; }
 }
 
 public class Category
@@ -95,5 +88,6 @@ public class Order
     
     // ---- navigation properties
     public Client Client { get; set; }
+    public ICollection<Product> Products { get; set; }
 }
 
