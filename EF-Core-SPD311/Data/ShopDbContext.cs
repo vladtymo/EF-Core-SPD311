@@ -25,6 +25,12 @@ public class ShopDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         
+        modelBuilder.Entity<OrderDetail>().HasKey(x => x.OrderId);
+        modelBuilder.Entity<OrderDetail>().Property(ent => ent.OrderId).ValueGeneratedNever();
+        modelBuilder.Entity<Order>().HasOne(x => x.Detail)
+            .WithOne(x => x.Order)
+            .HasForeignKey<Order>(x => x.DetailId);
+        
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ShopDbContext).Assembly);
         modelBuilder.SeedData();
     }
@@ -33,5 +39,6 @@ public class ShopDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Client> Clients { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
     public DbSet<Order> Orders { get; set; }
 }
