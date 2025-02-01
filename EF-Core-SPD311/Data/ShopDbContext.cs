@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace EF_Core_SPD311.Data;
 
 public class ShopDbContext : DbContext
 {
-    public ShopDbContext()
+    public ShopDbContext() : base()
     {
         //Database.EnsureDeleted();
         //Database.EnsureCreated();
@@ -16,8 +17,8 @@ public class ShopDbContext : DbContext
         base.OnConfiguring(optionsBuilder);
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer(
-                "workstation id=shop-db.mssql.somee.com;packet size=4096;user id=wladnaz_SQLLogin_1;pwd=qsyiy5d3ff;data source=shop-db.mssql.somee.com;persist security info=False;initial catalog=shop-db;TrustServerCertificate=True");
+            var cs = ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
+            optionsBuilder.UseSqlServer(cs);
         }
     }
 
