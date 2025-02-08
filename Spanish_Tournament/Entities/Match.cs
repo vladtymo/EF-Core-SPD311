@@ -9,8 +9,7 @@
 
         public Team? HomeTeam { get; set; }
         public Team? GuestTeam { get; set; }
-        public ICollection<Goal>? HomeTeamGoals { get; set; }
-        public ICollection<Goal>? GuestTeamGoals { get; set; }
+        public ICollection<Goal>? Goals { get; set; }
     }
 }
 

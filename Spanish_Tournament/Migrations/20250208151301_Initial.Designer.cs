@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Spanish_Tournament;
+using Spanish_Tournament.Persistance;
 
 #nullable disable
 
 namespace Spanish_Tournament.Migrations
 {
     [DbContext(typeof(TournamentDbContext))]
-    [Migration("20250208135131_Initial")]
+    [Migration("20250208151301_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -72,10 +72,7 @@ namespace Spanish_Tournament.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("GuestMatchId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("HomeMatchId")
+                    b.Property<int>("MatchId")
                         .HasColumnType("int");
 
                     b.Property<int>("Minute")
@@ -84,13 +81,16 @@ namespace Spanish_Tournament.Migrations
                     b.Property<int>("PlayerId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("GuestMatchId");
-
-                    b.HasIndex("HomeMatchId");
+                    b.HasIndex("MatchId");
 
                     b.HasIndex("PlayerId");
+
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Goals");
                 });
@@ -219,13 +219,11 @@ namespace Spanish_Tournament.Migrations
 
             modelBuilder.Entity("Spanish_Tournament.Entities.Goal", b =>
                 {
-                    b.HasOne("Spanish_Tournament.Entities.Match", "GuestMatch")
-                        .WithMany("GuestTeamGoals")
-                        .HasForeignKey("GuestMatchId");
-
-                    b.HasOne("Spanish_Tournament.Entities.Match", "HomeMatch")
-                        .WithMany("HomeTeamGoals")
-                        .HasForeignKey("HomeMatchId");
+                    b.HasOne("Spanish_Tournament.Entities.Match", "Match")
+                        .WithMany("Goals")
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Spanish_Tournament.Entities.Player", "Player")
                         .WithMany("Goals")
@@ -233,11 +231,17 @@ namespace Spanish_Tournament.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("GuestMatch");
+                    b.HasOne("Spanish_Tournament.Entities.Team", "Team")
+                        .WithMany("Goals")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.Navigation("HomeMatch");
+                    b.Navigation("Match");
 
                     b.Navigation("Player");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("Spanish_Tournament.Entities.Match", b =>
@@ -301,9 +305,7 @@ namespace Spanish_Tournament.Migrations
 
             modelBuilder.Entity("Spanish_Tournament.Entities.Match", b =>
                 {
-                    b.Navigation("GuestTeamGoals");
-
-                    b.Navigation("HomeTeamGoals");
+                    b.Navigation("Goals");
                 });
 
             modelBuilder.Entity("Spanish_Tournament.Entities.Player", b =>
@@ -318,6 +320,8 @@ namespace Spanish_Tournament.Migrations
 
             modelBuilder.Entity("Spanish_Tournament.Entities.Team", b =>
                 {
+                    b.Navigation("Goals");
+
                     b.Navigation("GuestMatches");
 
                     b.Navigation("HomeMatches");

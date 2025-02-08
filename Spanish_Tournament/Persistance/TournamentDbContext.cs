@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spanish_Tournament
+namespace Spanish_Tournament.Persistance
 {
     internal class TournamentDbContext : DbContext
     {
@@ -16,7 +16,7 @@ namespace Spanish_Tournament
         public DbSet<Country> Countries { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Match> Matches { get; set; }
-        public DbSet<Goal> Goals { get; set; }  
+        public DbSet<Goal> Goals { get; set; }
         public DbSet<Position> Positions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -34,6 +34,7 @@ namespace Spanish_Tournament
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentDbContext).Assembly);
+            modelBuilder.SeedInitialData();
         }
     }
 }

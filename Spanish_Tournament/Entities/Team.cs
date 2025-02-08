@@ -10,6 +10,7 @@
         public int Draws { get; set; }
 
         public City? City { get; set; }
+        public ICollection<Goal>? Goals { get; set; }
         public ICollection<Player>? Players { get; set; }
         public ICollection<Match>? HomeMatches { get; set; }
         public ICollection<Match>? GuestMatches { get; set; }

@@ -142,29 +142,30 @@ namespace Spanish_Tournament.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Minute = table.Column<int>(type: "int", nullable: false),
-                    HomeMatchId = table.Column<int>(type: "int", nullable: true),
-                    GuestMatchId = table.Column<int>(type: "int", nullable: true),
-                    PlayerId = table.Column<int>(type: "int", nullable: false)
+                    MatchId = table.Column<int>(type: "int", nullable: false),
+                    PlayerId = table.Column<int>(type: "int", nullable: false),
+                    TeamId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Goals", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Goals_Matches_GuestMatchId",
-                        column: x => x.GuestMatchId,
+                        name: "FK_Goals_Matches_MatchId",
+                        column: x => x.MatchId,
                         principalTable: "Matches",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Goals_Matches_HomeMatchId",
-                        column: x => x.HomeMatchId,
-                        principalTable: "Matches",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Goals_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Goals_Teams_TeamId",
+                        column: x => x.TeamId,
+                        principalTable: "Teams",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -173,19 +174,19 @@ namespace Spanish_Tournament.Migrations
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Goals_GuestMatchId",
+                name: "IX_Goals_MatchId",
                 table: "Goals",
-                column: "GuestMatchId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Goals_HomeMatchId",
-                table: "Goals",
-                column: "HomeMatchId");
+                column: "MatchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Goals_PlayerId",
                 table: "Goals",
                 column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Goals_TeamId",
+                table: "Goals",
+                column: "TeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Matches_GuestTeamId",

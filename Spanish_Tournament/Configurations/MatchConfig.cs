@@ -27,14 +27,9 @@ namespace Spanish_Tournament.Configurations
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
-                .HasMany(x => x.HomeTeamGoals)
-                .WithOne(x => x.HomeMatch)
-                .HasForeignKey(x => x.HomeMatchId);
-
-            builder
-                .HasMany(x => x.GuestTeamGoals)
-                .WithOne(x => x.GuestMatch)
-                .HasForeignKey(x => x.GuestMatchId);
+                .HasMany(x => x.Goals)
+                .WithOne(x => x.Match)
+                .HasForeignKey(x => x.MatchId);
         }
     }
 }
