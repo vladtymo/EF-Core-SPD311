@@ -2,6 +2,8 @@
 
 using System.Configuration;
 using EF_Core_SPD311.Data;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 Console.WriteLine("Hello EF Core!");
 
@@ -85,3 +87,6 @@ db.OrderDetails.Add(orderDetail);
 db.SaveChanges();
 
 Console.WriteLine("Well done!");
+
+// ------------------- ЗАПУСК STORED PROCEDURE -------------------
+db.SetOrderDiscount(2, 75);

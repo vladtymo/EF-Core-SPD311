@@ -5,6 +5,13 @@ namespace EF_Core_SPD311.Data;
 
 public class ShopDbContext : DbContext
 {
+    // -------- tables
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
+    public DbSet<Order> Orders { get; set; }
+
     public ShopDbContext() : base()
     {
         //Database.EnsureDeleted();
@@ -16,7 +23,7 @@ public class ShopDbContext : DbContext
         base.OnConfiguring(optionsBuilder);
         if (!optionsBuilder.IsConfigured)
         {
-            var cs = ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
+            var cs = ConfigurationManager.ConnectionStrings["LocalDb"].ConnectionString;
             optionsBuilder.UseSqlServer(cs);
         }
     }
@@ -35,10 +42,8 @@ public class ShopDbContext : DbContext
         modelBuilder.SeedData();
     }
 
-    // -------- tables
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<Client> Clients { get; set; }
-    public DbSet<OrderDetail> OrderDetails { get; set; }
-    public DbSet<Order> Orders { get; set; }
+    public void SetOrderDiscount(int orderId, int discount)
+    {
+        Database.ExecuteSqlInterpolated($"EXEC SetOrderDiscount {orderId}, {discount}");
+    }
 }
